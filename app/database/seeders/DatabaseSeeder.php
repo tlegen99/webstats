@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Site;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +22,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+        ]);
+
+        Artisan::call('partitions:ensure');
+
+        Site::factory()->create([
+            'domain' => 'localhost',
+            'public_key' => 'pk_demo',
         ]);
     }
 }
