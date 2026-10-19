@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo Shop — каталог</title>
+    <link rel="stylesheet" href="/style.css">
+    <script>window.webstats = window.webstats || function () { (window.webstats.q = window.webstats.q || []).push(arguments); };</script>
+    <script defer data-site="pk_demo" data-allow-localhost data-debug src="http://localhost:8080/js/webstats.js"></script>
+</head>
+<body>
+<header>
+    <nav>
+        <a class="logo" href="/">Demo Shop</a>
+        <a href="/catalog.html">Каталог</a>
+        <a href="/contact.html">Контакты</a>
+        <a href="/spa.html">SPA</a>
+    </nav>
+</header>
+<main>
+    <h1>Каталог</h1>
+    <div class="grid">
+        <div class="card">
+            <h2>Кроссовки Run</h2>
+            <p class="muted">Для бега по асфальту</p>
+            <a class="button" href="/product.html?id=run">Подробнее</a>
+        </div>
+        <div class="card">
+            <h2>Кроссовки Trail</h2>
+            <p class="muted">Для бега по лесу и горам</p>
+            <a class="button" href="/product.html?id=trail">Подробнее</a>
+        </div>
+        <div class="card">
+            <h2>Кеды City</h2>
+            <p class="muted">Для прогулок по городу</p>
+            <a class="button" href="/product.html?id=city">Подробнее</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Прайс-лист</h2>
+        <p><a href="/files/price-list.csv">Скачать прайс-лист (CSV)</a> — событие <code>download</code>.</p>
+    </div>
+</main>
+</body>
+</html>

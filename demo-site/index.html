@@ -3,10 +3,42 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Demo Shop</title>
+    <title>Demo Shop — главная</title>
+    <link rel="stylesheet" href="/style.css">
+    <script>window.webstats = window.webstats || function () { (window.webstats.q = window.webstats.q || []).push(arguments); };</script>
+    <script defer data-site="pk_demo" data-allow-localhost data-debug src="http://localhost:8080/js/webstats.js"></script>
 </head>
 <body>
-    <h1>Demo Shop</h1>
-    <p>Демо-сайт для проверки трекера. Страницы и кнопки появятся на этапе 1.</p>
+<header>
+    <nav>
+        <a class="logo" href="/">Demo Shop</a>
+        <a href="/catalog.html">Каталог</a>
+        <a href="/contact.html">Контакты</a>
+        <a href="/spa.html">SPA</a>
+    </nav>
+</header>
+<main>
+    <div class="card">
+        <h1>Кроссовки для бега и города</h1>
+        <p class="muted">Демо-магазин для проверки трекера Webstats. Каждое действие на сайте отправляет событие.</p>
+        <p>
+            <a class="button" href="/catalog.html">Перейти в каталог</a>
+            <button class="secondary" type="button" data-webstats-event="newsletter_click" data-webstats-props='{"place":"home_hero"}'>Подписаться на скидки</button>
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Что проверить</h2>
+        <ul>
+            <li><a href="/catalog.html">Обычный переход</a> — событие <code>pageview</code>.</li>
+            <li>Кнопка «Подписаться на скидки» — своё событие <code>newsletter_click</code>.</li>
+            <li><a href="https://laravel.com">Внешняя ссылка</a> — событие <code>outbound</code>.</li>
+            <li><a href="/?utm_source=telegram&amp;utm_medium=post&amp;utm_campaign=demo">Ссылка с UTM-метками</a> — источник «Telegram».</li>
+            <li><a href="/missing-page">Несуществующая страница</a> — событие <code>404</code>.</li>
+            <li>Переключите вкладку браузера и вернитесь — событие <code>engagement</code> со временем на странице.</li>
+        </ul>
+        <p class="hint">С атрибутом <code>data-debug</code> каждое событие видно в консоли браузера, а запросы — во вкладке Network.</p>
+    </div>
+</main>
 </body>
 </html>

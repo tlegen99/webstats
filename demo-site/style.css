@@ -1,0 +1,126 @@
+:root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --text: #1d1d1b;
+    --muted: #6b6b66;
+    --accent: #2f6fed;
+    --border: #e3e3de;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+nav {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+}
+
+nav .logo {
+    font-weight: 700;
+    margin-right: auto;
+}
+
+nav a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: var(--accent);
+}
+
+main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+button,
+.button {
+    display: inline-block;
+    background: var(--accent);
+    color: #ffffff;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button.secondary,
+.button.secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+form label {
+    display: block;
+    margin-bottom: 12px;
+}
+
+form input,
+form textarea {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.hint {
+    font-size: 14px;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 12px;
+}
+
+[hidden] {
+    display: none !important;
+}
