@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo Shop — SPA</title>
+    <link rel="stylesheet" href="/style.css">
+    <script>window.webstats = window.webstats || function () { (window.webstats.q = window.webstats.q || []).push(arguments); };</script>
+    <script defer data-site="pk_demo" data-allow-localhost data-debug src="http://localhost:8080/js/webstats.js"></script>
+</head>
+<body>
+<header>
+    <nav>
+        <a class="logo" href="/">Demo Shop</a>
+        <a href="/catalog.html">Каталог</a>
+        <a href="/contact.html">Контакты</a>
+        <a href="/spa.html">SPA</a>
+    </nav>
+</header>
+<main>
+    <h1>Личный кабинет (SPA)</h1>
+    <div class="tabs">
+        <button type="button" data-tab="orders">Заказы</button>
+        <button type="button" data-tab="profile" class="secondary">Профиль</button>
+        <button type="button" data-tab="bonuses" class="secondary">Бонусы</button>
+    </div>
+    <div class="card" id="tab-content"></div>
+    <p class="hint">Вкладки меняют адрес через <code>history.pushState</code> без перезагрузки страницы. Трекер отправляет <code>engagement</code> для старой страницы и <code>pageview</code> для новой. Кнопки «назад» и «вперёд» браузера тоже работают.</p>
+</main>
+<script>
+    var tabs = {
+        orders: '<h2>Заказы</h2><p class="muted">У вас пока нет заказов.</p>',
+        profile: '<h2>Профиль</h2><p class="muted">Имя, телефон и адрес доставки.</p>',
+        bonuses: '<h2>Бонусы</h2><p class="muted">На счёте 500 бонусных рублей.</p>'
+    };
+
+    function tabFromPath() {
+        var match = location.pathname.match(/^\/spa\/(\w+)$/);
+        return match && tabs[match[1]] ? match[1] : 'orders';
+    }
+
+    function render(tab) {
+        document.getElementById('tab-content').innerHTML = tabs[tab];
+        document.querySelectorAll('[data-tab]').forEach(function (button) {
+            button.classList.toggle('secondary', button.getAttribute('data-tab') !== tab);
+        });
+    }
+
+    document.querySelectorAll('[data-tab]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var tab = button.getAttribute('data-tab');
+            history.pushState({ tab: tab }, '', '/spa/' + tab);
+            render(tab);
+        });
+    });
+
+    window.addEventListener('popstate', function () {
+        render(tabFromPath());
+    });
+
+    render(tabFromPath());
+</script>
+</body>
+</html>
