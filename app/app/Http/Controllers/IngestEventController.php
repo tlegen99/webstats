@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Site;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,7 +35,7 @@ class IngestEventController
         }
 
         $site = Site::where('public_key', $data['s'])->first();
-        if (!$site) {
+        if (! $site) {
             return response()->noContent(202);
         }
 
