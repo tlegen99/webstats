@@ -49,7 +49,12 @@ class IngestEventController
 
         $salt = config('app.key').now()->utc()->toDateString();
         $hash = hash('sha256', $salt.$site->id.$request->ip().($request->userAgent() ?? ''), true);
-        $visitorId = unpack('J', substr($hash, 0, 8))[1];
+        $unpacked = unpack('J', substr($hash, 0, 8));
+        $visitorId = $unpacked === false ? 0 : $unpacked[1];
+
+        $utm = fn (string $key): string => is_string($query[$key] ?? null)
+            ? mb_substr($query[$key], 0, 255)
+            : '';
 
         DB::table('events')->insert([
             'event_id' => Str::uuid7(),
@@ -61,9 +66,9 @@ class IngestEventController
             'hostname' => $host,
             'pathname' => $url['path'] ?? '/',
             'referrer_host' => parse_url($data['r'] ?? '', PHP_URL_HOST) ?: '',
-            'utm_source' => mb_substr((string) ($query['utm_source'] ?? ''), 0, 255),
-            'utm_medium' => mb_substr((string) ($query['utm_medium'] ?? ''), 0, 255),
-            'utm_campaign' => mb_substr((string) ($query['utm_campaign'] ?? ''), 0, 255),
+            'utm_source' => $utm('utm_source'),
+            'utm_medium' => $utm('utm_medium'),
+            'utm_campaign' => $utm('utm_campaign'),
             'screen_w' => $data['w'] ?? null,
             'engagement_ms' => $data['e'] ?? 0,
             'scroll_depth' => $data['d'] ?? 0,
