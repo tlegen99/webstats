@@ -4,7 +4,7 @@ export GID := $(shell id -g)
 DC = docker compose
 ART = $(DC) exec app php artisan
 
-.PHONY: up up-all down logs sh migrate fresh test lint
+.PHONY: up up-all down logs sh migrate fresh test lint fix
 
 up:            ## базовые сервисы
 	$(DC) up -d --build
@@ -33,3 +33,6 @@ test:
 lint:
 	$(DC) exec app vendor/bin/pint --test
 	$(DC) exec app vendor/bin/phpstan analyse --memory-limit=1G
+
+fix:
+	$(DC) exec app vendor/bin/pint

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Site;
+use App\Services\UserAgentParser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 
 class IngestEventController
 {
-    public function __invoke(Request $request): Response|JsonResponse
+    public function __invoke(Request $request, UserAgentParser $parser): Response|JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         if (! is_array($data)) {
@@ -45,6 +46,11 @@ class IngestEventController
             return response()->noContent(202);
         }
 
+        $ua = $parser->parse($request->userAgent() ?? '');
+        if ($ua === null) {
+            return response()->noContent(202);
+        }
+
         parse_str($url['query'] ?? '', $query);
 
         $salt = config('app.key').now()->utc()->toDateString();
@@ -73,6 +79,9 @@ class IngestEventController
             'engagement_ms' => $data['e'] ?? 0,
             'scroll_depth' => $data['d'] ?? 0,
             'props' => empty($data['p']) ? '{}' : json_encode($data['p']),
+            'browser' => $ua['browser'],
+            'os' => $ua['os'],
+            'device' => $ua['device'],
         ]);
 
         return response()->noContent(202);
