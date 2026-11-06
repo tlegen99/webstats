@@ -12,7 +12,15 @@ function sendEvent(array|string $payload, array $server = [])
 {
     $body = is_array($payload) ? json_encode($payload) : $payload;
 
-    return test()->call('POST', '/api/event', [], [], [], array_merge(['CONTENT_TYPE' => 'text/plain'], $server), $body);
+    return test()->call(
+        'POST',
+        '/api/event',
+        [],
+        [],
+        [],
+        array_merge(['CONTENT_TYPE' => 'text/plain', 'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'], $server),
+        $body
+    );
 }
 
 it('stores a pageview', function () {
@@ -31,7 +39,10 @@ it('stores a pageview', function () {
         ->and($event->pathname)->toBe('/pricing')
         ->and($event->utm_source)->toBe('google')
         ->and($event->referrer_host)->toBe('google.com')
-        ->and($event->screen_w)->toBe(1440);
+        ->and($event->screen_w)->toBe(1440)
+        ->and($event->browser)->toBe('Chrome')
+        ->and($event->os)->toBe('Mac')
+        ->and($event->device)->toBe('desktop');
 });
 
 it('rejects invalid json', function () {
@@ -108,13 +119,25 @@ it('stores empty object when props are missing', function () {
 
 it('counts the same browser as one visitor', function () {
     $payload = ['s' => $this->site->public_key, 'n' => 'pageview', 'u' => 'https://example.com/'];
+    $chrome = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36';
+    $firefox = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0';
 
-    sendEvent($payload, ['HTTP_USER_AGENT' => 'Chrome'])->assertStatus(202);
-    sendEvent($payload, ['HTTP_USER_AGENT' => 'Chrome'])->assertStatus(202);
-    sendEvent($payload, ['HTTP_USER_AGENT' => 'Firefox'])->assertStatus(202);
+    sendEvent($payload, ['HTTP_USER_AGENT' => $chrome])->assertStatus(202);
+    sendEvent($payload, ['HTTP_USER_AGENT' => $chrome])->assertStatus(202);
+    sendEvent($payload, ['HTTP_USER_AGENT' => $firefox])->assertStatus(202);
 
     $visitors = DB::table('events')->orderBy('seq')->pluck('visitor_id');
 
-    expect($visitors[0])->toBe($visitors[1])
+    expect($visitors)->toHaveCount(3)
+        ->and($visitors[0])->toBe($visitors[1])
         ->and($visitors[2])->not->toBe($visitors[0]);
+});
+
+it('ignores bots', function () {
+    sendEvent(
+        ['s' => $this->site->public_key, 'n' => 'pageview', 'u' => 'https://example.com/'],
+        ['HTTP_USER_AGENT' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'],
+    )->assertStatus(202);
+
+    expect(DB::table('events')->count())->toBe(0);
 });
